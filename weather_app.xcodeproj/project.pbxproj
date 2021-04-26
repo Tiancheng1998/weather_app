@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,9 @@
 		EA2C25922633AFBE00A8A244 /* weather_appTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C25912633AFBE00A8A244 /* weather_appTests.swift */; };
 		EA2C259D2633AFBE00A8A244 /* weather_appUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C259C2633AFBE00A8A244 /* weather_appUITests.swift */; };
 		EA2C25E726349CD100A8A244 /* CityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C25E626349CD100A8A244 /* CityTableViewCell.swift */; };
+		EA2C25E92634ACF900A8A244 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C25E82634ACF900A8A244 /* WeatherData.swift */; };
+		EA2C25EB2636379900A8A244 /* LayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C25EA2636379900A8A244 /* LayoutGuide.swift */; };
+		EA2C25ED2636483900A8A244 /* WeatherDailyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C25EC2636483900A8A244 /* WeatherDailyViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +67,10 @@
 		EA2C259C2633AFBE00A8A244 /* weather_appUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = weather_appUITests.swift; sourceTree = "<group>"; };
 		EA2C259E2633AFBE00A8A244 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EA2C25E626349CD100A8A244 /* CityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTableViewCell.swift; sourceTree = "<group>"; };
+		EA2C25E82634ACF900A8A244 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
+		EA2C25EA2636379900A8A244 /* LayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutGuide.swift; sourceTree = "<group>"; };
+		EA2C25EC2636483900A8A244 /* WeatherDailyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDailyViewController.swift; sourceTree = "<group>"; };
+		EA2C25EE263680F800A8A244 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		F07F06F17E59564DB15F6096 /* Pods-weather_appUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather_appUITests.debug.xcconfig"; path = "Target Support Files/Pods-weather_appUITests/Pods-weather_appUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -148,7 +155,11 @@
 				EA2C257A2633AFBC00A8A244 /* AppDelegate.swift */,
 				EA2C257C2633AFBC00A8A244 /* SceneDelegate.swift */,
 				EA2C257E2633AFBC00A8A244 /* CityMainViewController.swift */,
+				EA2C25EE263680F800A8A244 /* Config.xcconfig */,
+				EA2C25EC2636483900A8A244 /* WeatherDailyViewController.swift */,
+				EA2C25E82634ACF900A8A244 /* WeatherData.swift */,
 				EA2C25E626349CD100A8A244 /* CityTableViewCell.swift */,
+				EA2C25EA2636379900A8A244 /* LayoutGuide.swift */,
 				EA2C25802633AFBC00A8A244 /* Main.storyboard */,
 				EA2C25832633AFBE00A8A244 /* Assets.xcassets */,
 				EA2C25852633AFBE00A8A244 /* LaunchScreen.storyboard */,
@@ -241,6 +252,7 @@
 		EA2C256F2633AFBC00A8A244 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1160;
 				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = Tony_Wang;
@@ -396,7 +408,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA2C25ED2636483900A8A244 /* WeatherDailyViewController.swift in Sources */,
 				EA2C257F2633AFBC00A8A244 /* CityMainViewController.swift in Sources */,
+				EA2C25E92634ACF900A8A244 /* WeatherData.swift in Sources */,
+				EA2C25EB2636379900A8A244 /* LayoutGuide.swift in Sources */,
 				EA2C257B2633AFBC00A8A244 /* AppDelegate.swift in Sources */,
 				EA2C25E726349CD100A8A244 /* CityTableViewCell.swift in Sources */,
 				EA2C257D2633AFBC00A8A244 /* SceneDelegate.swift in Sources */,
@@ -456,6 +471,7 @@
 /* Begin XCBuildConfiguration section */
 		EA2C259F2633AFBE00A8A244 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA2C25EE263680F800A8A244 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -516,6 +532,7 @@
 		};
 		EA2C25A02633AFBE00A8A244 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA2C25EE263680F800A8A244 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

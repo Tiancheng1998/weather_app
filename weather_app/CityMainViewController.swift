@@ -13,11 +13,7 @@ class CityMainViewController: UIViewController {
     
     private var cityLabel: UILabel!
     // init by default initializer
-    private let addCity: UIBarButtonItem = { () in
-        let button = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addCityTapped))
-        button.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 30.0)!], for: .normal)
-        return button
-    }()
+    private var addCity: UIBarButtonItem!
     private let citiesTable: UITableView = {
         let tv = UITableView()
         tv.separatorStyle = .none
@@ -28,11 +24,19 @@ class CityMainViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .white
-        navigationItem.leftBarButtonItem = addCity
+        
+        setupAddCityButton()
         setupCityLabel()
         setupTableView()
-        
+
         setupConstraints()
+        
+    }
+    
+    private func setupAddCityButton() {
+        addCity = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addCityTapped))
+        addCity.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 30.0)!], for: .normal)
+        navigationItem.setLeftBarButton(addCity, animated: true)
         
     }
     
@@ -70,7 +74,8 @@ class CityMainViewController: UIViewController {
     
     // MARK: Actions
     @objc func addCityTapped() {
-        
+        WeatherData.shared.addCity(name: "New York City")
+        citiesTable.reloadData()
     }
 
 
@@ -78,12 +83,12 @@ class CityMainViewController: UIViewController {
 
 extension CityMainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10;
+        return WeatherData.shared.cityNames.count;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.citiesTable.dequeueReusableCell(withIdentifier: CityTableViewCell.identifier, for: indexPath) as! CityTableViewCell
-        cell.backgroundColor = .orange
+        cell.setContent(titleText: "New York City", sunriseTime: "6:30 AM", sunsetTime: "7:00 PM", weather: .sunny, temp: 78)
         return cell
     }
     
@@ -91,14 +96,22 @@ extension CityMainViewController: UITableViewDelegate, UITableViewDataSource {
         return 1
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        true
-    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 120
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = WeatherDailyViewController()
+        vc.cityName = "New York City"
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            WeatherData.shared.deleteCity(name: WeatherData.shared.cityNames[indexPath.row])
+            
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
 }
 
