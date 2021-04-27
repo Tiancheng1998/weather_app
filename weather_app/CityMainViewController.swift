@@ -9,7 +9,12 @@
 import UIKit
 import SnapKit
 
-class CityMainViewController: UIViewController {
+protocol MainVCDataSource {
+    func refreshUI()
+}
+
+class CityMainViewController: UIViewController, MainVCDataSource {
+    
     
     private var cityLabel: UILabel!
     // init by default initializer
@@ -24,6 +29,7 @@ class CityMainViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .white
+        WeatherData.shared.dataSource = self
         
         setupAddCityButton()
         setupCityLabel()
@@ -75,6 +81,10 @@ class CityMainViewController: UIViewController {
     // MARK: Actions
     @objc func addCityTapped() {
         WeatherData.shared.addCity(name: "New York City")
+        citiesTable.reloadData()
+    }
+    
+    func refreshUI() {
         citiesTable.reloadData()
     }
 
