@@ -30,7 +30,7 @@ struct CityData: Codable{
     var lat: Double
     var lon: Double
     var timezone: String
-    var timezoneOffset: Double
+    var timezoneOffset: Int
     var daily: [DailyData]
     
     struct DailyData: Codable{
@@ -90,6 +90,7 @@ class WeatherData {
     private let dformatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "MM/dd"
+        f.timeZone = TimeZone(abbreviation: "UTC")
         return f
     }()
     private let hmformatter: DateFormatter = {
@@ -97,6 +98,7 @@ class WeatherData {
         f.amSymbol = "AM"
         f.pmSymbol = "PM"
         f.dateFormat = "hh:mm a"
+        f.timeZone = TimeZone(abbreviation: "UTC")
         return f
     }()
     
@@ -115,15 +117,15 @@ class WeatherData {
         return self.data.count == cityNames.count
     }
     
-    func unix2Date(for timeStamp: Int) -> String {
-        let epochTime = TimeInterval(timeStamp)
+    func  unix2Date(for timeStamp: Int, tzOff: Int) -> String {
+        let epochTime = TimeInterval(timeStamp + tzOff)
         let date = Date(timeIntervalSince1970: epochTime)
         return dformatter.string(from: date)
         
     }
     
-    func unix2hm(for timeStamp: Int) -> String {
-        let epochTime = TimeInterval(timeStamp)
+    func unix2hm(for timeStamp: Int, tzOff: Int) -> String {
+        let epochTime = TimeInterval(timeStamp + tzOff)
         let date = Date(timeIntervalSince1970: epochTime)
         return hmformatter.string(from: date)
         

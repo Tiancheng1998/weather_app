@@ -85,16 +85,14 @@ extension WeatherDailyViewController: UITableViewDelegate, UITableViewDataSource
         let city = self.weatherData
         if indexPath.row < city.daily.count {
             let day = city.daily[indexPath.row]
-            let sunrise = WeatherData.shared.unix2hm(for: day.sunrise)
-            let sunset = WeatherData.shared.unix2hm(for: day.sunset)
-            let dayformatted = WeatherData.shared.unix2Date(for: day.dt)
+            let sunrise = WeatherData.shared.unix2hm(for: day.sunrise, tzOff: city.timezoneOffset)
+            let sunset = WeatherData.shared.unix2hm(for: day.sunset, tzOff: city.timezoneOffset)
+            let dayformatted = WeatherData.shared.unix2Date(for: day.dt, tzOff: city.timezoneOffset)
             cell.setContent(titleText: dayformatted, sunriseTime: sunrise, sunsetTime: sunset, weather: day.weather[0].main, temp: day.temp.day)
             return cell
         }
         return cell
         
-//        cell.setContent(titleText: "__/__", sunriseTime: "__:__ AM", sunsetTime: "__:__ PM", weather: "sunny", temp: nil)
-//        return cell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

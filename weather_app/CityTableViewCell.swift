@@ -130,7 +130,7 @@ class CityTableViewCell: UITableViewCell {
         title.text = titleText
         self.sunsetTime.text = sunsetTime
         self.sunriseTime.text = sunriseTime
-        weatherIconView.image = UIImage(named: "sunny")
+        weatherIconView.image = UIImage(named: weather)
         if let t = temp {
             self.tempLabel.text = String(t) + "F"
         } else {

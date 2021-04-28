@@ -36,7 +36,7 @@ class CityMainViewController: UIViewController {
     }
     
     private func setupAddCityButton() {
-        addCity = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addCityTapped))
+        addCity = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addCityButtonTapped))
         addCity.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Helvetica", size: 30.0)!], for: .normal)
         navigationItem.setLeftBarButton(addCity, animated: true)
         
@@ -75,14 +75,19 @@ class CityMainViewController: UIViewController {
     }
     
     // MARK: Actions
-    @objc func addCityTapped() {
+    @objc func addCityButtonTapped() {
+        let vc = EnterLocationViewController()
+        vc.MainVC = self
+        present(vc, animated: true, completion: nil)
         
-        
-        WeatherData.shared.addCity(name: "New York City", lat: 40.7, lon: -74)
-        citiesTable.reloadData()
     }
     
     func refreshUI() {
+        citiesTable.reloadData()
+    }
+    
+    func addCity(cityName: String, lat: Double, lon: Double) {
+        WeatherData.shared.addCity(name: cityName, lat: lat, lon: lon)
         citiesTable.reloadData()
     }
 
@@ -97,14 +102,15 @@ extension CityMainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.citiesTable.dequeueReusableCell(withIdentifier: CityTableViewCell.identifier, for: indexPath) as! CityTableViewCell
         let cityName = WeatherData.shared.cityNames[indexPath.row]
-        if let firstDay = WeatherData.shared.data[cityName]?.daily[0] {
-            let sunrise = WeatherData.shared.unix2hm(for: firstDay.sunrise)
-            let sunset = WeatherData.shared.unix2hm(for: firstDay.sunset)
+        if let city = WeatherData.shared.data[cityName] {
+            let firstDay = city.daily[0]
+            let sunrise = WeatherData.shared.unix2hm(for: firstDay.sunrise, tzOff: city.timezoneOffset)
+            let sunset = WeatherData.shared.unix2hm(for: firstDay.sunset, tzOff: city.timezoneOffset)
             let temperature = firstDay.temp.day
-            cell.setContent(titleText: cityName, sunriseTime: sunrise, sunsetTime: sunset, weather: "sunny", temp: temperature)
+            cell.setContent(titleText: cityName, sunriseTime: sunrise, sunsetTime: sunset, weather: firstDay.weather[0].main, temp: temperature)
             return cell
         }
-        cell.setContent(titleText: cityName, sunriseTime: "__:__ AM", sunsetTime: "__:__ PM", weather: "sunny", temp: nil)
+        cell.setContent(titleText: cityName, sunriseTime: "__:__ AM", sunsetTime: "__:__ PM", weather: "Clouds", temp: nil)
         return cell
     }
     

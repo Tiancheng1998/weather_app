@@ -23,6 +23,7 @@
 		EA2C25EB2636379900A8A244 /* LayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C25EA2636379900A8A244 /* LayoutGuide.swift */; };
 		EA2C25ED2636483900A8A244 /* WeatherDailyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C25EC2636483900A8A244 /* WeatherDailyViewController.swift */; };
 		EAA2F9AB2639C1A900B2D337 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA2F9AA2639C1A900B2D337 /* WeatherData.swift */; };
+		EAA2F9AD2639CBF800B2D337 /* EnterLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA2F9AC2639CBF800B2D337 /* EnterLocationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		EA2C25EC2636483900A8A244 /* WeatherDailyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDailyViewController.swift; sourceTree = "<group>"; };
 		EA2C25EE263680F800A8A244 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		EAA2F9AA2639C1A900B2D337 /* WeatherData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
+		EAA2F9AC2639CBF800B2D337 /* EnterLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterLocationViewController.swift; sourceTree = "<group>"; };
 		F07F06F17E59564DB15F6096 /* Pods-weather_appUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather_appUITests.debug.xcconfig"; path = "Target Support Files/Pods-weather_appUITests/Pods-weather_appUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +159,7 @@
 				EA2C257A2633AFBC00A8A244 /* AppDelegate.swift */,
 				EA2C257C2633AFBC00A8A244 /* SceneDelegate.swift */,
 				EA2C257E2633AFBC00A8A244 /* CityMainViewController.swift */,
+				EAA2F9AC2639CBF800B2D337 /* EnterLocationViewController.swift */,
 				EA2C25EE263680F800A8A244 /* Config.xcconfig */,
 				EA2C25EC2636483900A8A244 /* WeatherDailyViewController.swift */,
 				EA2C25E82634ACF900A8A244 /* WeatherData.swift */,
@@ -418,6 +421,7 @@
 				EA2C257B2633AFBC00A8A244 /* AppDelegate.swift in Sources */,
 				EA2C25E726349CD100A8A244 /* CityTableViewCell.swift in Sources */,
 				EAA2F9AB2639C1A900B2D337 /* WeatherData.swift in Sources */,
+				EAA2F9AD2639CBF800B2D337 /* EnterLocationViewController.swift in Sources */,
 				EA2C257D2633AFBC00A8A244 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
