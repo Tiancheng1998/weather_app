@@ -14,9 +14,9 @@ class WeatherDailyViewController: UIViewController {
     
     // data
     public var cityName:String!
-    private var weatherData: [[String: Any]]? {
+    private var weatherData: CityData {
         get {
-            return WeatherData.shared.data[cityName]
+            return WeatherData.shared.data[cityName]!
         }
     }
     
@@ -77,20 +77,24 @@ class WeatherDailyViewController: UIViewController {
 
 extension WeatherDailyViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10;
+        return 8;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CityTableViewCell.identifier, for: indexPath) as! CityTableViewCell
-        if let dataUnwrapped = self.weatherData {
-            if indexPath.row < dataUnwrapped.count {
-                let parsedData = WeatherData.dailyWeatherParser(for: dataUnwrapped[indexPath.row])
-                cell.setContent(titleText: parsedData["date"] as! String, sunriseTime: parsedData["sunrise"] as! String, sunsetTime: parsedData["sunset"] as! String, weather: parsedData["weather"] as! condition, temp: parsedData["temp"] as? Double)
-                return cell
-            }
+        let city = self.weatherData
+        if indexPath.row < city.daily.count {
+            let day = city.daily[indexPath.row]
+            let sunrise = WeatherData.shared.unix2hm(for: day.sunrise)
+            let sunset = WeatherData.shared.unix2hm(for: day.sunset)
+            let dayformatted = WeatherData.shared.unix2Date(for: day.dt)
+            cell.setContent(titleText: dayformatted, sunriseTime: sunrise, sunsetTime: sunset, weather: day.weather[0].main, temp: day.temp.day)
+            return cell
         }
-        cell.setContent(titleText: "09/10", sunriseTime: "__:__ AM", sunsetTime: "__:__ PM", weather: .unknown, temp: nil)
         return cell
+        
+//        cell.setContent(titleText: "__/__", sunriseTime: "__:__ AM", sunsetTime: "__:__ PM", weather: "sunny", temp: nil)
+//        return cell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

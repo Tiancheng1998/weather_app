@@ -15,13 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        if let _ = UserDefaults.standard.stringArray(forKey: "cities") {
+        if let _ = UserDefaults.standard.array(forKey: "cities") {
+            WeatherData.shared.loadDataAll()
             return true
         }
         
 //        print(Bundle.main.infoDictionary?["WEATHER_API_KEY"] as! String)
         // first time the app launches, need to init UserDefaults
-        UserDefaults.standard.set([String](), forKey: "cities")
+        UserDefaults.standard.set([[Any]](), forKey: "cities")
         return true
         
     }

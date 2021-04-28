@@ -9,11 +9,7 @@
 import UIKit
 import SnapKit
 
-protocol MainVCDataSource {
-    func refreshUI()
-}
-
-class CityMainViewController: UIViewController, MainVCDataSource {
+class CityMainViewController: UIViewController {
     
     
     private var cityLabel: UILabel!
@@ -29,7 +25,7 @@ class CityMainViewController: UIViewController, MainVCDataSource {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .white
-        WeatherData.shared.dataSource = self
+        WeatherData.shared.mainVC = self
         
         setupAddCityButton()
         setupCityLabel()
@@ -80,7 +76,9 @@ class CityMainViewController: UIViewController, MainVCDataSource {
     
     // MARK: Actions
     @objc func addCityTapped() {
-        WeatherData.shared.addCity(name: "New York City")
+        
+        
+        WeatherData.shared.addCity(name: "New York City", lat: 40.7, lon: -74)
         citiesTable.reloadData()
     }
     
@@ -98,7 +96,15 @@ extension CityMainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.citiesTable.dequeueReusableCell(withIdentifier: CityTableViewCell.identifier, for: indexPath) as! CityTableViewCell
-        cell.setContent(titleText: "New York City", sunriseTime: "6:30 AM", sunsetTime: "7:00 PM", weather: .sunny, temp: 78)
+        let cityName = WeatherData.shared.cityNames[indexPath.row]
+        if let firstDay = WeatherData.shared.data[cityName]?.daily[0] {
+            let sunrise = WeatherData.shared.unix2hm(for: firstDay.sunrise)
+            let sunset = WeatherData.shared.unix2hm(for: firstDay.sunset)
+            let temperature = firstDay.temp.day
+            cell.setContent(titleText: cityName, sunriseTime: sunrise, sunsetTime: sunset, weather: "sunny", temp: temperature)
+            return cell
+        }
+        cell.setContent(titleText: cityName, sunriseTime: "__:__ AM", sunsetTime: "__:__ PM", weather: "sunny", temp: nil)
         return cell
     }
     
@@ -111,9 +117,11 @@ extension CityMainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = WeatherDailyViewController()
-        vc.cityName = "New York City"
-        navigationController?.pushViewController(vc, animated: true)
+        if WeatherData.shared.data[WeatherData.shared.cityNames[indexPath.row]] != nil {
+            let vc = WeatherDailyViewController()
+            vc.cityName = WeatherData.shared.cityNames[indexPath.row]
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -122,6 +130,13 @@ extension CityMainViewController: UITableViewDelegate, UITableViewDataSource {
             
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if WeatherData.shared.data[WeatherData.shared.cityNames[indexPath.row]] != nil {
+            return true
+        }
+        return false
     }
 }
 

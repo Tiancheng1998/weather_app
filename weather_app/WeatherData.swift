@@ -84,48 +84,84 @@ struct CityData: Codable{
 class WeatherData {
     
     static let shared = WeatherData()
-    private let api: String = "https://api.openweathermap.org/data/2.5/onecall?lat=22&lon=32&exclude=minutely,hourly,alerts,current&units=imperial&appid=" + (Bundle.main.infoDictionary?["WEATHER_API_KEY"] as! String)
+    private let api = "https://api.openweathermap.org/data/2.5/onecall?lat=%f&lon=%f&exclude=minutely,hourly,alerts,current&units=imperial&appid=" + (Bundle.main.infoDictionary?["WEATHER_API_KEY"] as! String)
     
     private let defaults = UserDefaults.standard
+    private let dformatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "MM/dd"
+        return f
+    }()
+    private let hmformatter: DateFormatter = {
+        let f = DateFormatter()
+        f.amSymbol = "AM"
+        f.pmSymbol = "PM"
+        f.dateFormat = "hh:mm a"
+        return f
+    }()
     
-    var dataSource: MainVCDataSource?
+    var mainVC: CityMainViewController?
     var data: [String : CityData] = [:]
     var cityNames: [String] {
         get {
-            return defaults.stringArray(forKey: "cities")!.sorted()
+            let arr = defaults.array(forKey: "cities")! as! [[Any]]
+            let names = arr.map { $0[0] as! String }
+            return names
         }
     }
     
-//    init() {
-//        data = ["New York City": [["Temperature" : 81, "condition" : condition.sunny], ["Temperature" : 79, "condition" : condition.rainy], ["Temperature" : 81, "condition" : condition.cloudy] ]]
-//    }
     
     private func dataLoadDidComplete() -> Bool {
         return self.data.count == cityNames.count
     }
     
+    func unix2Date(for timeStamp: Int) -> String {
+        let epochTime = TimeInterval(timeStamp)
+        let date = Date(timeIntervalSince1970: epochTime)
+        return dformatter.string(from: date)
+        
+    }
+    
+    func unix2hm(for timeStamp: Int) -> String {
+        let epochTime = TimeInterval(timeStamp)
+        let date = Date(timeIntervalSince1970: epochTime)
+        return hmformatter.string(from: date)
+        
+    }
+    
     func deleteCity(name: String) {
         // force casting to let the bugs show
         // sometimes good to assert expected behavior
-        var oldCities = defaults.stringArray(forKey: "cities")!
+        let oldCities = defaults.array(forKey: "cities")! as! [[Any]]
         // copy on write
-        oldCities.remove(at: oldCities.firstIndex(of: name)!)
-        defaults.set(oldCities, forKey: "cities")
+        let newCities = oldCities.filter { ($0[0] as! String) != name }
+        defaults.set(newCities, forKey: "cities")
         data.removeValue(forKey: name)
     }
     
-    func addCity(name: String) {
+    // add individual city and loads its data
+    func addCity(name: String, lat: Double, lon: Double) {
         if let _ = data[name] {
             return
         }
-        var oldCities = defaults.stringArray(forKey: "cities")!
-        oldCities.append(name)
+        var oldCities = defaults.array(forKey: "cities")!
+        oldCities.append([name, lat, lon])
         defaults.set(oldCities, forKey: "cities")
         
         loadDataCity(for: name)
     }
     
-    private func loadDataAll() {
+    func getCoord(for name: String) -> [Double]? {
+        for city in defaults.array(forKey: "cities")! as! [[Any]] {
+            if city[0] as! String == name {
+                return [city[1] as! Double, city[2] as! Double]
+            }
+        }
+        return nil
+    }
+    
+    // load all data based on user defaults, called at app launch
+    func loadDataAll() {
         for c in cityNames {
             loadDataCity(for: c)
         }
@@ -136,7 +172,8 @@ class WeatherData {
     private func loadDataCity(for city: String) {
         // call api
         // add keyvalue pair to data
-        let task = URLSession.shared.dataTask(with: URL(string: api)!) { (data, _, error) in
+        let coord = getCoord(for: city)!
+        let task = URLSession.shared.dataTask(with: URL(string: String(format: api, coord[0], coord[1]))!) { (data, _, error) in
             if let error = error {
                 // error handling
                 print(error)
@@ -152,7 +189,7 @@ class WeatherData {
                 if self.dataLoadDidComplete() {
                     DispatchQueue.main.async {
                         // update UI
-                        self.dataSource?.refreshUI()
+                        self.mainVC?.refreshUI()
                     }
                 }
             } catch {
@@ -163,10 +200,10 @@ class WeatherData {
         task.resume()
     }
     
-    class func dailyWeatherParser(for data: [String : Any]) -> [String : Any]{
-        let res: [String : Any] = [:]
-        return res
-    }
-    
+//    class func dailyWeatherParser(for data: [String : Any]) -> [String : Any]{
+//        let res: [String : Any] = [:]
+//        return res
+//    }
+//    
     
 }

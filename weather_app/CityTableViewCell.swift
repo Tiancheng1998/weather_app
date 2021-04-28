@@ -70,7 +70,8 @@ class CityTableViewCell: UITableViewCell {
         
         cardView.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview().inset(20)
-            make.top.bottom.equalToSuperview().inset(10)
+            make.height.equalTo(100)
+            make.centerY.equalToSuperview()
         }
 
     }
@@ -78,6 +79,7 @@ class CityTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     private func setupLeftStack() {
         sunriseImg.snp.makeConstraints { (make) in
@@ -124,7 +126,7 @@ class CityTableViewCell: UITableViewCell {
         }
     }
     
-    public func setContent(titleText:String, sunriseTime: String, sunsetTime: String, weather: condition, temp: Double?) {
+    public func setContent(titleText:String, sunriseTime: String, sunsetTime: String, weather: String, temp: Double?) {
         title.text = titleText
         self.sunsetTime.text = sunsetTime
         self.sunriseTime.text = sunriseTime
@@ -135,12 +137,6 @@ class CityTableViewCell: UITableViewCell {
             self.tempLabel.text = "__F"
         }
         
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
 }
