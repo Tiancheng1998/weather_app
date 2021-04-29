@@ -20,12 +20,15 @@ class CityMainViewController: UIViewController {
         tv.separatorStyle = .none
         return tv
     }()
+    private let refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        WeatherData.shared.loadDataAll(refreshUI)
         view.backgroundColor = .white
-        WeatherData.shared.mainVC = self
+        citiesTable.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
         setupAddCityButton()
         setupCityLabel()
@@ -82,12 +85,19 @@ class CityMainViewController: UIViewController {
         
     }
     
-    func refreshUI() {
+    @objc func refreshData() {
+        WeatherData.shared.loadDataAll(refreshUI)
+        
         citiesTable.reloadData()
     }
     
+    func refreshUI() {
+        citiesTable.reloadData()
+        self.refreshControl.endRefreshing()
+    }
+    
     func addCity(cityName: String, lat: Double, lon: Double) {
-        WeatherData.shared.addCity(name: cityName, lat: lat, lon: lon)
+        WeatherData.shared.addCity(name: cityName, lat: lat, lon: lon, refreshUI)
         citiesTable.reloadData()
     }
 

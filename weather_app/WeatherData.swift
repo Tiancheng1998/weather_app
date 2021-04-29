@@ -101,8 +101,7 @@ class WeatherData {
         f.timeZone = TimeZone(abbreviation: "UTC")
         return f
     }()
-    
-    var mainVC: CityMainViewController?
+
     var data: [String : CityData] = [:]
     var cityNames: [String] {
         get {
@@ -142,7 +141,7 @@ class WeatherData {
     }
     
     // add individual city and loads its data
-    func addCity(name: String, lat: Double, lon: Double) {
+    func addCity(name: String, lat: Double, lon: Double, _ completionHandler: (() -> Void)? = nil) {
         if let _ = data[name] {
             return
         }
@@ -150,7 +149,7 @@ class WeatherData {
         oldCities.append([name, lat, lon])
         defaults.set(oldCities, forKey: "cities")
         
-        loadDataCity(for: name)
+        loadDataCity(for: name, completionHandler)
     }
     
     func getCoord(for name: String) -> [Double]? {
@@ -163,15 +162,16 @@ class WeatherData {
     }
     
     // load all data based on user defaults, called at app launch
-    func loadDataAll() {
+    func loadDataAll(_ completeHandler: (() -> Void)? = nil) {
+        data = [:]
         for c in cityNames {
-            loadDataCity(for: c)
+            loadDataCity(for: c, completeHandler)
         }
     }
     
     // try? try! try do catch and throwing errors
     // Because the vend(itemNamed:) method propagates any errors it throws, any code that calls this method must either handle the errors—using a do-catch statement, try?, or try!—or continue to propagate them. (try does not handle error, merely propogating it)
-    private func loadDataCity(for city: String) {
+    private func loadDataCity(for city: String, _ completeHandler: (() -> Void)? = nil) {
         // call api
         // add keyvalue pair to data
         let coord = getCoord(for: city)!
@@ -179,6 +179,9 @@ class WeatherData {
             if let error = error {
                 // error handling
                 print(error)
+                if let handler = completeHandler {
+                    handler()
+                }
                 return
             }
             
@@ -191,21 +194,20 @@ class WeatherData {
                 if self.dataLoadDidComplete() {
                     DispatchQueue.main.async {
                         // update UI
-                        self.mainVC?.refreshUI()
+                        if let handler = completeHandler {
+                            handler()
+                        }
                     }
                 }
             } catch {
                 print(error)
+                if let handler = completeHandler {
+                    handler()
+                }
             }
         }
         
         task.resume()
     }
-    
-//    class func dailyWeatherParser(for data: [String : Any]) -> [String : Any]{
-//        let res: [String : Any] = [:]
-//        return res
-//    }
-//    
     
 }
